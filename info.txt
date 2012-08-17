@@ -1,0 +1,79 @@
+Drupal Instance Name : drupal.local
+Admin Account : admin
+Password : admin123
+
+Database
+Database Name : drupal
+User : drupal
+Password : admin123
+
+
+1.Create a subfolder inside C:\xampp\htdocs\drupal.local for each virtual host that you want to add
+  to your Apache server.
+
+2.Open C:\WINDOWS\system32\drivers\etc\hosts in Notepad or a script editor.
+  Look for the following line at the bottom:
+
+  127.0.0.1   localhost3.
+
+3.On a separate line, 
+  enter 127.0.0.1, followed by some space and the name of 
+  the virtual host you want to register. For instance, 
+  to set up a virtual host called phpdw, enter the following:
+
+  127.0.0.1   phpdw4.
+
+4.Add any further virtual hosts, 
+  each one on a separate line and pointing to the
+  same IP address (127.0.0.1). Save the hosts file, and close it.
+
+5.Open C:\Program Files\Apache Software Foundation\Apache2.2\conf\httpd.conf 
+  in a text editor. If you're using XAMPP, 
+  the file is located at C:\xampp\apache\conf\httpd.conf. 
+  Scroll down to the Supplemental configuration section at the end,
+  and locate the following section (around line 460):
+
+  #Virtual hosts
+  #Include conf/extra/httpd-vhosts.conf
+
+6.Remove the # from the second line so the section now looks like this:
+
+#Virtual hosts
+Include conf/extra/httpd-vhosts.conf
+
+7.Save httpd.conf and close it.
+
+8.Open C:\Program Files\Apache Software Foundation\Apache2.2\conf\extra\httpd-vhosts.conf
+  in Notepad or a text editor. If you're using XAMPP,
+  the location is C:\xampp\apache\conf\extra\httpd-vhosts.conf. The main section looks like this:
+
+
+
+Note: In XAMPP, all lines are commented out. You must
+remove the hash mark from the beginning of the line that contains the following directive:
+
+NameVirtualHost *.80
+
+9.Position your cursor in the blank space shown on line 15 in 
+  the preceding screenshot, and insert the following four lines of code:
+
+<Directory C:/vhosts>
+  Order Deny,Allow
+  Allow from all
+</Directory>This sets the correct permissions for the folder that contains the sites you want to treat as virtual hosts. If you chose a location other than C:\vhosts as the top-level folder, replace the pathname in the first line. The pathname must use forward slashes in place of the Windows convention of backward slashes. Also surround the pathname in quotes if it contains any spaces.
+
+As long as all your virtual hosts are in subfolders of this top-level folder, this directive sets the correct permissions for all of them. However, if they are in different top-level folders, create a separate <Directory> directive for each one.
+
+10.The code shown on lines 27 through 42 in the preceding screenshot shows examples of how to define virtual hosts (in XAMPP, they're commented out). It shows all the commands that can be used, but only DocumentRoot and ServerName are required.
+
+When you enable virtual hosting, Apache disables the main server root, so the first definition needs to reproduce the original server root. You then add each new virtual host within a pair of <VirtualHost> tags, using the location of the site’s web files as the value for DocumentRoot, and the name of the virtual host for ServerName. Again, use forward slashes, and if the path contains any spaces, enclose the whole path in quotes. If your server root is located, like mine, at C:\htdocs, and you are adding phpdw as a virtual host in C:\vhosts, change the code shown on lines 27 through 42 so they look like this (in XAMPP, just add these new directives at the bottom of the file, and set the DocumentRoot for localhost to C:/xampp/htdocs):
+
+<VirtualHost *:80>
+  DocumentRoot c:/htdocs
+  ServerName localhost
+</VirtualHost>
+<VirtualHost *:80>
+  DocumentRoot c:/vhosts/phpdw
+  ServerName phpdw</VirtualHost>11.Save httpd-vhosts.conf, and restart your computer. All sites in the server root will continue to be accessible through http://localhost/sitename/. Anything in a virtual host will be accessible through a direct address, such as http://phpdw/.
+
+12.If you still have difficulty accessing your virtual hosts, make sure that you have added index.php to the DirectoryIndex directive in httpd.conf. 

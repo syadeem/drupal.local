@@ -1,0 +1,37 @@
+<?php 
+
+/**
+ *
+ * @param array $path
+ * @param array $arg 
+ * 
+ * Implementation of hook_help()
+ */
+function helloboy_help($path,$arg) {
+    switch ($path) {
+        case 'admin/help#helloboy':
+            return t('This is the test module to see the power of hello world. Help Hook!');
+    }
+}
+
+/**
+ * Implementation of hook_menu() 
+ */
+function helloboy_menu() {
+    $items = array();
+    $items['helloboy/sayhi'] = array(
+        'title' => 'Say Hi',
+        'description'   => 'Say hi from HelloBoy Module',
+        'page callback' => '_helloboy_sayhi_page',
+        'access arguments' => array('View published content'),
+        'type' => MENU_NORMAL_ITEM, // MENU_CALLBACK
+    );
+    
+    return $items;
+}
+
+function _helloboy_sayhi_page() {
+    echo '<h1>'.'Hello Boy, Shoaib!'.'</h1>';
+    exit;
+}
+?>
